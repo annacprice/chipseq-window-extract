@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
 import pandas as pd
-import re
 from Bio import SeqIO
-
 
 def TSVextract():
     # extract columns from the tsv
@@ -21,15 +19,26 @@ def TSVextract():
 def genomeParser():
     # save the reference genome to biopython Seq object
 
+    # use biopython to parse the fasta file
     for seq_rec in SeqIO.parse('testdata/genome.fasta', 'fasta'):
         genome = seq_rec.seq
 
     return genome
 
+def buildFASTA(genome, seqName, startCoord, endCoord):
+    # build FASTA file with sequence information in the headers
+    
+    with open('testdata/output.fasta', 'w') as write_file:
+        for name, coord1, coord2 in zip(seqName, startCoord, endCoord):
+            FASTAhead = ">{0}|{1}|{2}".format(name, coord1, coord2)
+            write_file.write(FASTAhead + '\n')
+            seqWin = genome[coord1:coord2]
+            write_file.write(str(seqWin) + '\n')
+
 def main():
     seqName, startCoord, endCoord = TSVextract()
     genome = genomeParser()
-
+    buildFASTA(genome, seqName, startCoord, endCoord)
 
 if __name__ == "__main__":
     main()
