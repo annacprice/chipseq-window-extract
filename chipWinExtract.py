@@ -3,7 +3,7 @@
 import pandas as pd
 import re
 from Bio import SeqIO
-import numpy as np
+
 
 def TSVextract():
     # extract columns from the tsv
@@ -18,20 +18,17 @@ def TSVextract():
 
     return seqName, startCoord, endCoord
 
-def genomeArray():
-    # save the reference genome to an array
+def genomeParser():
+    # save the reference genome to biopython Seq object
 
-    genome = []
-    for seq_rec in SeqIO.parse('testdata/genome.fasta', '''fasta'''):
-        genome.append(seq_rec.seq)
+    for seq_rec in SeqIO.parse('testdata/genome.fasta', 'fasta'):
+        genome = seq_rec.seq
 
-    genomeArr = np.array(genome)
-
-    return genomeArr
+    return genome
 
 def main():
     seqName, startCoord, endCoord = TSVextract()
-    genomeArr = genomeArray()
+    genome = genomeParser()
 
 
 if __name__ == "__main__":
