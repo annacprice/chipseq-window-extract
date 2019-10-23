@@ -28,12 +28,18 @@ def genomeParser():
 def buildFASTA(genome, seqName, startCoord, endCoord):
     # build FASTA file with sequence information in the headers
     
+    # write fasta file
     with open('testdata/output.fasta', 'w') as write_file:
         for name, coord1, coord2 in zip(seqName, startCoord, endCoord):
             FASTAhead = ">{0}|{1}|{2}".format(name, coord1, coord2)
             write_file.write(FASTAhead + '\n')
             seqWin = genome[coord1:coord2]
-            write_file.write(str(seqWin) + '\n')
+            seqWin = str(seqWin)
+            # chunk sequence into lengths of 50
+            seq50 = [seqWin[i:i+50] for i in range(0, len(seqWin), 50)]
+            for elem in seq50:
+                write_file.write(elem + '\n')
+
 
 def main():
     seqName, startCoord, endCoord = TSVextract()
