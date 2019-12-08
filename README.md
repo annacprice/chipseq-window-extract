@@ -28,8 +28,14 @@ optional arguments:
   -e COLEND, --col-end COLEND
                         Column number for the end coordinate of the window
 ```
-chipWinExtract.py requires an input chip-seq tsv file with the window coordinates and a reference genome. E.g. for the data in testdata:
+chipWinExtract.py requires an input chip-seq tsv file with the window coordinates and a reference genome. E.g. running for chr1 in testdata:
 ```
-python chipWinExtract.py -t testdata/chipseq.tsv -r testdata/genome.fasta -o testdata/output.fasta -i 1 -s 2 -e 3
+python chipWinExtract.py -t testdata/chr1.tsv -r testdata/chr1.fasta -o testdata/chr1_windows.fasta -i 1 -s 2 -e 3
 ```
-will reproduce output.fasta.
+reproduces testdata/chr1_windows.fasta.
+
+To extract the windows for both chr1 and chr2 in testdata, you can use the bash wrapper script chipWinBash.sh:
+```
+./chipWinBash.sh
+```
+which reproduces testdata/chr1_windows.fasta and testdata/chr2_windows.fasta.
