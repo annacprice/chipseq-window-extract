@@ -6,6 +6,11 @@ import argparse
 
 def TSVextract(inputTSV, colSeq, colStart, colEnd):
     # extract columns from the tsv
+    
+    # reset column numbers for pandas (counts from 0)
+    colSeq = int(colSeq) - 1
+    colStart = int(colStart) - 1
+    colEnd = int(colEnd) - 1
 
     # load tsv, skip first line and set header to None
     tsv = pd.read_csv(inputTSV, sep='\t', skiprows=[0], header=None)
