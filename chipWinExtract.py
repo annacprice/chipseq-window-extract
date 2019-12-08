@@ -7,8 +7,8 @@ import argparse
 def TSVextract(inputTSV, colSeq, colStart, colEnd):
     # extract columns from the tsv
 
-    # load tsv, skip first line and set header to None
-    tsv = pd.read_csv(inputTSV, sep='\t', skiprows=[0], header=None)
+    # load tsv
+    tsv = pd.read_csv(inputTSV, sep='\t', header=None)
 
     # create an array for each column
     seqName = tsv.values[:,int(colSeq)]
@@ -32,9 +32,9 @@ def buildFASTA(genome, seqName, startCoord, endCoord, outputFASTA):
     # write fasta file
     with open(outputFASTA, 'w') as write_file:
         for name, coord1, coord2 in zip(seqName, startCoord, endCoord):
-            FASTAhead = ">{0}|{1}|{2}".format(name, coord1, coord2)
+            FASTAhead = ">{0}|{1}|{2}".format(name, int(coord1), int(coord2))
             write_file.write(FASTAhead + '\n')
-            seqWin = genome[coord1:coord2]
+            seqWin = genome[int(coord1):int(coord2)]
             seqWin = str(seqWin)
             # chunk sequence into lengths of 50
             seq50 = [seqWin[i:i+50] for i in range(0, len(seqWin), 50)]
@@ -59,7 +59,7 @@ def main():
     args = parser.parse_args()
     inputTSV = args.inputTSV
     inputREF = args.inputREF
-    outputFASTA =args.outputFASTA
+    outputFASTA = args.outputFASTA
     colSeq = args.colSeq
     colStart = args.colStart
     colEnd = args.colEnd
