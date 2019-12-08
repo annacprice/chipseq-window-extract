@@ -7,8 +7,8 @@ import argparse
 def TSVextract(inputTSV, colSeq, colStart, colEnd):
     # extract columns from the tsv
 
-    # load tsv
-    tsv = pd.read_csv(inputTSV, sep='\t', header=None)
+    # load tsv, skip first line and set header to None
+    tsv = pd.read_csv(inputTSV, sep='\t', skiprows=[0], header=None)
 
     # create an array for each column
     seqName = tsv.values[:,int(colSeq)]
