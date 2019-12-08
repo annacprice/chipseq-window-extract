@@ -45,5 +45,5 @@ which reproduces testdata/chr1_windows.fasta and testdata/chr2_windows.fasta.
 
 chipWinExtract.py expects only one chromosome per tsv file. To split your tsv file into separate chromosomes, you can use the following command in bash:
 ```
-awk 'NR==1 { header=$0 } NR>1 { print (!a[$1]++? header ORS $0 : $0) > (""$1".txt")}' input.tsv
+awk 'NR==1 { header=$0 } NR>1 { print (!a[$1]++? header ORS $0 : $0) >> (""$1".txt"); close(""$1".txt")}' input.tsv
 ```
