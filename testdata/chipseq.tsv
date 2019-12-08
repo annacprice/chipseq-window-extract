@@ -1,4 +1,4 @@
-seqnames	start	end	width
+seqid	start	end	width
 seq1	33	89	57
 seq2	112	190	79
 seq3	289	458	169
