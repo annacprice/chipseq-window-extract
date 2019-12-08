@@ -36,6 +36,8 @@ def buildFASTA(genome, seqName, startCoord, endCoord, outputFASTA):
             write_file.write(FASTAhead + '\n')
             seqWin = genome[int(coord1):int(coord2)]
             seqWin = str(seqWin)
+            # convert sequence to uppercase
+            seqWin = seqWin.upper()
             # chunk sequence into lengths of 50
             seq50 = [seqWin[i:i+50] for i in range(0, len(seqWin), 50)]
             for elem in seq50:
