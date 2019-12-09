@@ -58,9 +58,9 @@ def main():
                         help="Path to the input tsv")
     parser.add_argument("-r", "--input-ref", dest="inputREF", required=True, \
                         help="Path to directory of the reference genome")
-    parser.add_argument("-o", "--output-fasta", dest="outputFASTA", required=True, \
+    parser.add_argument("-o", "--output-dir", dest="outputFASTA", required=True, \
                         help="Path for the directory for the output fasta")
-    parser.add_argument("-i", "--col-seq", dest="colSeq", required=True, \
+    parser.add_argument("-i", "--col-name", dest="colName", required=True, \
                         help="Column number for the chromosome name")
     parser.add_argument("-s", "--col-start", dest="colStart", required=True, \
                         help="Column number for the start coordinate of the window")
@@ -71,7 +71,7 @@ def main():
     inputTSV = args.inputTSV
     inputREF = args.inputREF
     outputFASTA = args.outputFASTA
-    colSeq = args.colSeq
+    colName = args.colName
     colStart = args.colStart
     colEnd = args.colEnd
     
@@ -81,7 +81,7 @@ def main():
         with open("%s.tsv" % chro, "w") as output:
             for row in rows:
                 output.write("\t".join(row) + "\n")
-        seqName, startCoord, endCoord = TSVextract("%s.tsv" % chro, colSeq, colStart, colEnd)
+        seqName, startCoord, endCoord = TSVextract("%s.tsv" % chro, colName, colStart, colEnd)
         genome = genomeParser(chro, inputREF)
         buildFASTA(chro, genome, seqName, startCoord, endCoord, outputFASTA)
 
