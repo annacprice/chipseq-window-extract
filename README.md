@@ -1,11 +1,10 @@
 # **chipseq-window-extract**
-Extracts chip-seq windows from a reference chromosome and builds a fasta file.
+Extracts chip-seq windows from reference chromosomes and builds a fasta file for each chromosome.
 
 ## **Requirements**
 Requires python 3.x
 
 The following python packages are prerequisites:
-- pandas
 - biopython
 
 ## **Usage**
@@ -20,7 +19,7 @@ optional arguments:
     -r INPUTREF, --input-ref INPUTREF
                           Path to the directory where the reference chromosomes are
     -o OUTPUTFASTA, --output-dir OUTPUTFASTA
-                          Output directory path for the generated fasta
+                          Output directory path for the generated fasta files
     -i COLNAME, --col-name COLNAME
                           Column number for the chromosome name
     -s COLSTART, --col-start COLSTART
@@ -31,7 +30,7 @@ optional arguments:
 ```
 chipWinExtract.py requires an input chip-seq tsv file, with columns for the name of each chromosome and the start and end window coordinates. You will also need the corresponding reference chromosomes to extract the sequence windows from. 
 
-It splits the input tsv by chromosome, then creates a fasta file for each chromosomes extracted windows. The name of the chromosome in the tsv file should be the same as the reference chromosome, which is assumed to have the file extension .fasta.
+It splits the input tsv by chromosome, then creates a fasta file for each chromosome's extracted windows. The name of the chromosome in the tsv file should be the same as the reference chromosome, which is assumed to have the file extension .fa* (e.g. .fa or .fasta).
 
 ## **Examples**
 E.g. to run for the data in testdata:
