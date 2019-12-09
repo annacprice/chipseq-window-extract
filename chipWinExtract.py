@@ -76,8 +76,11 @@ def main():
     colEnd = args.colEnd
     
     # split input tsv by chromosome
-    for chro, rows in groupby(csv.reader(open(inputTSV), delimiter="\t"),
-                             lambda row: row[0]):
+    csv_reader = csv.reader(open(inputTSV), delimiter="\t")
+    # skip header
+    next(csv_reader)
+    for chro, rows in groupby(csv_reader,
+                             lambda row: row[int(colName)-1]):
         with open("%s.tsv" % chro, "w") as output:
             for row in rows:
                 output.write("\t".join(row) + "\n")
