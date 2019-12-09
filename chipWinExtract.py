@@ -3,6 +3,8 @@
 import pandas as pd
 from Bio import SeqIO
 import argparse
+import csv
+from itertools import groupby
 
 def TSVextract(inputTSV, colSeq, colStart, colEnd):
     # extract columns from the tsv
@@ -12,8 +14,8 @@ def TSVextract(inputTSV, colSeq, colStart, colEnd):
     colStart = int(colStart) - 1
     colEnd = int(colEnd) - 1
 
-    # load tsv, skip first line and set header to None
-    tsv = pd.read_csv(inputTSV, sep='\t', skiprows=[0], header=None)
+    # load tsv, set header to None
+    tsv = pd.read_csv(inputTSV, sep='\t', header=None)
 
     # create an array for each column
     seqName = tsv.values[:,int(colSeq)]
@@ -22,20 +24,22 @@ def TSVextract(inputTSV, colSeq, colStart, colEnd):
 
     return seqName, startCoord, endCoord
 
-def genomeParser(inputREF):
+def genomeParser(chro, inputREF):
     # save the reference genome to biopython Seq object
 
+    genomePath = inputREF + "/" + chro + ".fasta"
     # use biopython to parse the reference fasta file
-    for seq_rec in SeqIO.parse(inputREF, 'fasta'):
+    for seq_rec in SeqIO.parse(genomePath, 'fasta'):
         genome = seq_rec.seq
 
     return genome
 
-def buildFASTA(genome, seqName, startCoord, endCoord, outputFASTA):
+def buildFASTA(chro, genome, seqName, startCoord, endCoord, outputFASTA):
     # build FASTA file with sequence information in the headers
     
     # write fasta file
-    with open(outputFASTA, 'w') as write_file:
+    filepath = outputFASTA + "/" + chro + "_windows" + ".fasta"
+    with open(filepath, 'w') as write_file:
         for name, coord1, coord2 in zip(seqName, startCoord, endCoord):
             FASTAhead = ">{0}|{1}|{2}".format(name, int(coord1), int(coord2))
             write_file.write(FASTAhead + '\n')
@@ -53,11 +57,11 @@ def main():
     parser.add_argument("-t", "--input-tsv", dest="inputTSV", required=True, \
                         help="Path to the input tsv")
     parser.add_argument("-r", "--input-ref", dest="inputREF", required=True, \
-                        help="Path to the reference genome")
+                        help="Path to directory of the reference genome")
     parser.add_argument("-o", "--output-fasta", dest="outputFASTA", required=True, \
-                        help="Path for the output fasta")
+                        help="Path for the directory for the output fasta")
     parser.add_argument("-i", "--col-seq", dest="colSeq", required=True, \
-                        help="Column number for the sequence ID")
+                        help="Column number for the chromosome name")
     parser.add_argument("-s", "--col-start", dest="colStart", required=True, \
                         help="Column number for the start coordinate of the window")
     parser.add_argument("-e", "--col-end", dest="colEnd", required=True, \
@@ -71,9 +75,15 @@ def main():
     colStart = args.colStart
     colEnd = args.colEnd
     
-    seqName, startCoord, endCoord = TSVextract(inputTSV, colSeq, colStart, colEnd)
-    genome = genomeParser(inputREF)
-    buildFASTA(genome, seqName, startCoord, endCoord, outputFASTA)
+    # split input tsv by chromosome
+    for chro, rows in groupby(csv.reader(open(inputTSV), delimiter="\t"),
+                             lambda row: row[0]):
+        with open("%s.tsv" % chro, "w") as output:
+            for row in rows:
+                output.write("\t".join(row) + "\n")
+        seqName, startCoord, endCoord = TSVextract("%s.tsv" % chro, colSeq, colStart, colEnd)
+        genome = genomeParser(chro, inputREF)
+        buildFASTA(chro, genome, seqName, startCoord, endCoord, outputFASTA)
 
 if __name__ == "__main__":
     main()
