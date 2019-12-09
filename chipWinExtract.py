@@ -55,11 +55,11 @@ def buildFASTA(chro, genome, seqName, startCoord, endCoord, outputFASTA):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--input-tsv", dest="inputTSV", required=True, \
-                        help="Path to the input tsv")
+                        help="Path to the input chip-seq tsv")
     parser.add_argument("-r", "--input-ref", dest="inputREF", required=True, \
-                        help="Path to directory of the reference genome")
+                        help="Path to directory for the reference chromosomes")
     parser.add_argument("-o", "--output-dir", dest="outputFASTA", required=True, \
-                        help="Path for the directory for the output fasta")
+                        help="Output directory path for the generated fasta")
     parser.add_argument("-i", "--col-name", dest="colName", required=True, \
                         help="Column number for the chromosome name")
     parser.add_argument("-s", "--col-start", dest="colStart", required=True, \
