@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
 
-import pandas as pd
 from Bio import SeqIO
 import argparse
 import csv
 from itertools import groupby
+import os
 import glob
 
 def genomeParser(chro, inputREF):
-    # save the reference genome to biopython Seq object
-
-    genomePath = inputREF + "/" + chro + ".fasta"
+    # save the reference fasta to biopython Seq object
+    
+    # build path to the reference fasta
+    fastaName = chro + ".fa*"
+    findFasta = os.path.join(inputREF, fastaName)
+    fastaPath = glob.glob(findFasta)
+  
     # use biopython to parse the reference fasta file
-    for seq_rec in SeqIO.parse(genomePath, 'fasta'):
-        genome = seq_rec.seq
+    if fastaName:
+        for seq_rec in SeqIO.parse(str(fastaPath[0]), 'fasta'):
+            genome = seq_rec.seq
+    else:
+        print ("Error: reference fasta not found")
 
     return genome
 
@@ -21,8 +28,8 @@ def buildFASTA(chro, genome, seqName, startCoord, endCoord, outputFASTA):
     # build FASTA file with sequence information in the headers
     
     # write fasta file
-    filepath = outputFASTA + "/" + chro + "_windows" + ".fasta"
-    with open(filepath, 'w') as write_file:
+    outfastaName = chro + "_windows" + ".fasta"
+    with open(os.path.join(outputFASTA, outfastaName), 'w') as write_file:
         for name, coord1, coord2 in zip(seqName, startCoord, endCoord):
             FASTAhead = ">{0}|{1}|{2}".format(name, int(coord1), int(coord2))
             write_file.write(FASTAhead + '\n')
@@ -42,7 +49,7 @@ def main():
     parser.add_argument("-r", "--input-ref", dest="inputREF", required=True, \
                         help="Path to the directory where the reference chromosomes are")
     parser.add_argument("-o", "--output-dir", dest="outputFASTA", required=True, \
-                        help="Output directory path for the generated fasta")
+                        help="Output directory path for the generated fasta files")
     parser.add_argument("-i", "--col-name", dest="colName", required=True, \
                         help="Column number for the chromosome name")
     parser.add_argument("-s", "--col-start", dest="colStart", required=True, \
