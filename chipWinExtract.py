@@ -57,7 +57,7 @@ def main():
     parser.add_argument("-t", "--input-tsv", dest="inputTSV", required=True, \
                         help="Path to the input chip-seq tsv")
     parser.add_argument("-r", "--input-ref", dest="inputREF", required=True, \
-                        help="Path to directory for the reference chromosomes")
+                        help="Path to the directory where the reference chromosomes are")
     parser.add_argument("-o", "--output-dir", dest="outputFASTA", required=True, \
                         help="Output directory path for the generated fasta")
     parser.add_argument("-i", "--col-name", dest="colName", required=True, \
