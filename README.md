@@ -29,10 +29,9 @@ optional arguments:
                         Column number for the end coordinate of the window
 
 ```
-
-## **Examples**
 chipWinExtract.py requires an input chip-seq tsv file with no header, with columns for the name of each chromosome and the start and end window coordinates. You will also need the corresponding reference chromosomes to extract the sequence windows from. It splits the input tsv by chromosome, then creates a fasta file for each chromosome. The name of the chromosome in the tsv file should be the same as the reference chromosome, which is assumed to have the file extension .fasta.
 
+## **Examples**
 E.g. to run for the data in testdata:
 ```
 python chipWinExtract.py -t testdata/chipseq.tsv -r testdata -o testdata -i 1 -s 2 -e 3
