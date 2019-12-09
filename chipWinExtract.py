@@ -5,24 +5,7 @@ from Bio import SeqIO
 import argparse
 import csv
 from itertools import groupby
-
-def TSVextract(inputTSV, colSeq, colStart, colEnd):
-    # extract columns from the tsv
-    
-    # reset column numbers for pandas (counts from 0)
-    colSeq = int(colSeq) - 1
-    colStart = int(colStart) - 1
-    colEnd = int(colEnd) - 1
-
-    # load tsv, set header to None
-    tsv = pd.read_csv(inputTSV, sep='\t', header=None)
-
-    # create an array for each column
-    seqName = tsv.values[:,int(colSeq)]
-    startCoord = tsv.values[:,int(colStart)]
-    endCoord = tsv.values[:,int(colEnd)]
-
-    return seqName, startCoord, endCoord
+import glob
 
 def genomeParser(chro, inputREF):
     # save the reference genome to biopython Seq object
@@ -75,18 +58,28 @@ def main():
     colStart = args.colStart
     colEnd = args.colEnd
     
-    # split input tsv by chromosome
+    # reset column numbers (counts from 0)
+    colName = int(colName) - 1
+    colStart = int(colStart) - 1
+    colEnd = int(colEnd) - 1
+    
+    # initialise arrays for chromosome names and coordinates
+    chrName = []
+    startCoord = []
+    endCoord = []
+    
+    # open tsv
     csv_reader = csv.reader(open(inputTSV), delimiter="\t")
     # skip header
     next(csv_reader)
-    for chro, rows in groupby(csv_reader,
-                             lambda row: row[int(colName)-1]):
-        with open("%s.tsv" % chro, "w") as output:
-            for row in rows:
-                output.write("\t".join(row) + "\n")
-        seqName, startCoord, endCoord = TSVextract("%s.tsv" % chro, colName, colStart, colEnd)
+    # split tsv by chromosome
+    for chro, rows in groupby(csv_reader, lambda row: row[colName]):
+        for row in rows:
+            chrName.append(row[colName])
+            startCoord.append(row[colStart])
+            endCoord.append(row[colEnd])
         genome = genomeParser(chro, inputREF)
-        buildFASTA(chro, genome, seqName, startCoord, endCoord, outputFASTA)
+        buildFASTA(chro, genome, chrName, startCoord, endCoord, outputFASTA)
 
 if __name__ == "__main__":
     main()
