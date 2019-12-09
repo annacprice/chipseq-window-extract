@@ -18,32 +18,23 @@ optional arguments:
   -t INPUTTSV, --input-tsv INPUTTSV
                         Path to the input tsv
   -r INPUTREF, --input-ref INPUTREF
-                        Path to the reference genome
+                        Path to directory of the reference genome
   -o OUTPUTFASTA, --output-fasta OUTPUTFASTA
-                        Path for the output fasta
+                        Path for the directory for the output fasta
   -i COLSEQ, --col-seq COLSEQ
-                        Column number for the sequence ID
+                        Column number for the chromosome name
   -s COLSTART, --col-start COLSTART
                         Column number for the start coordinate of the window
   -e COLEND, --col-end COLEND
                         Column number for the end coordinate of the window
+
 ```
-chipWinExtract.py requires an input chip-seq tsv file with the window coordinates and a reference genome.
 
 ## **Examples**
-E.g. running for chr1 in testdata:
-```
-python chipWinExtract.py -t testdata/chr1.tsv -r testdata/chr1.fasta -o testdata/chr1_windows.fasta -i 1 -s 2 -e 3
-```
-reproduces testdata/chr1_windows.fasta.
+chipWinExtract.py requires an input chip-seq tsv file with no header, with columns for the name of each chromosome and the start and end window coordinates. You will also need the corresponding reference chromosomes to extract the sequence windows from. It splits the input tsv by chromosome, then creates a fasta file for each chromosome. The name of the chromosome in the tsv file should be the same as the reference chromosome, which is assumed to have the file extension .fasta.
 
-To extract the windows for both chr1 and chr2 in testdata, you can use the bash wrapper script chipWinBash.sh:
+E.g. to run for the data in testdata:
 ```
-./chipWinBash.sh
+python chipWinExtract.py -t testdata/chipseq.tsv -r testdata -o testdata -i 1 -s 2 -e 3
 ```
-which reproduces testdata/chr1_windows.fasta and testdata/chr2_windows.fasta.
-
-chipWinExtract.py expects only one chromosome per tsv file. To split your tsv file into separate chromosomes, you can use the following command in bash:
-```
-awk 'NR==1 { header=$0 } NR>1 { print (!a[$1]++? header ORS $0 : $0) >> (""$1".txt"); close(""$1".txt")}' input.tsv
-```
+this reproduces testdata/chr1_windows.fasta and testdata/chr2_windows.fasta.
