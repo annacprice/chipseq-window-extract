@@ -101,6 +101,10 @@ def main():
             endCoord.append(row[colEnd])
         genome = genomeParser(chro, inputREF)
         buildFASTA(chro, genome, chrName, startCoord, endCoord, outputFASTA)
+        # reset arrays for next chromosome
+        chrName = []
+        startCoord = []
+        endCoord = []
 
     # if --concat-fasta flag used, then concatenate the output fasta files
     if concat:
