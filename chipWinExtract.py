@@ -14,13 +14,14 @@ def genomeParser(chro, inputREF):
     fastaName = chro + ".fa*"
     findFasta = os.path.join(inputREF, fastaName)
     fastaPath = glob.glob(findFasta)
-  
+    
     # use biopython to parse the reference fasta file
-    if fastaName:
+    if fastaPath:
         for seq_rec in SeqIO.parse(str(fastaPath[0]), 'fasta'):
             genome = seq_rec.seq
     else:
         print ("Error: reference fasta not found")
+        exit()
 
     return genome
 
