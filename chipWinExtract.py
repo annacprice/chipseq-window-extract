@@ -42,6 +42,17 @@ def buildFASTA(chro, genome, seqName, startCoord, endCoord, outputFASTA):
             for elem in seq50:
                 write_file.write(elem + '\n')
 
+def concatFASTA(outputFASTA):
+    # concatenate the output fasta files into one file
+
+    findFasta = os.path.join(outputFASTA, "*.fasta")
+    collectFasta = glob.glob(findFasta)
+    with open(os.path.join(outputFASTA, "concat.fasta"), 'w') as outfile:
+        for fasta in collectFasta:
+            with open(fasta) as infile:
+                for line in infile:
+                    outfile.write(line)
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--input-tsv", dest="inputTSV", required=True, \
@@ -56,6 +67,8 @@ def main():
                         help="Column number for the start coordinate of the window")
     parser.add_argument("-e", "--col-end", dest="colEnd", required=True, \
                         help="Column number for the end coordinate of the window")
+    parser.add_argument("-c", "--concat-fasta", dest="concat", action="store_true", \
+                        help="Concatenate the final fasta files into one file")
                         
     args = parser.parse_args()
     inputTSV = args.inputTSV
@@ -64,6 +77,7 @@ def main():
     colName = args.colName
     colStart = args.colStart
     colEnd = args.colEnd
+    concat = args.concat
     
     # reset column numbers (counts from 0)
     colName = int(colName) - 1
@@ -87,6 +101,10 @@ def main():
             endCoord.append(row[colEnd])
         genome = genomeParser(chro, inputREF)
         buildFASTA(chro, genome, chrName, startCoord, endCoord, outputFASTA)
+
+    # if --concat-fasta flag used, then concatenate the output fasta files
+    if concat:
+        concatFASTA(outputFASTA)
 
 if __name__ == "__main__":
     main()
