@@ -26,6 +26,7 @@ optional arguments:
                           Column number for the start coordinate of the window
     -e COLEND, --col-end COLEND
                           Column number for the end coordinate of the window
+    -c, --concat-fasta    Concatenate the final fasta files into one file
 
 ```
 chipWinExtract.py requires an input chip-seq tsv file, with columns for the name of each chromosome and the start and end window coordinates. You will also need the corresponding reference chromosomes to extract the sequence windows from. 
@@ -38,3 +39,5 @@ E.g. to run for the data in testdata:
 python chipWinExtract.py -t testdata/chipseq.tsv -r testdata/ref_chromosomes -o testdata/extracted_windows -i 1 -s 2 -e 3
 ```
 this reproduces testdata/extracted_windows/chr1_windows.fasta and testdata/extracted_windows/chr2_windows.fasta.
+
+You can also use the optional **--concat-fasta** flag to concatenate all the output fasta files into a single fasta.
